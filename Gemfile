@@ -1,7 +1,10 @@
-source :rubygems
-
-ruby '1.9.3'
+source 'https://rubygems.org'
 
 gem 'nokogiri'
-gem 'fakeweb'
-gem 'debugger'
+gem 'rails', '3.2.18'
+
+group :development, :test do
+  gem 'rspec', '2.14'
+  gem 'fakeweb'
+  gem 'debugger'
+end

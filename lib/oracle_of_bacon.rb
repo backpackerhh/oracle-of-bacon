@@ -5,6 +5,7 @@ require 'nokogiri'              # XML parser
 require 'active_model'          # for validations
 
 class OracleOfBacon
+  include ActiveModel::Validations
 
   class InvalidError < RuntimeError ; end
   class NetworkError < RuntimeError ; end
@@ -13,18 +14,23 @@ class OracleOfBacon
   attr_accessor :from, :to
   attr_reader :api_key, :response, :uri
   
-  include ActiveModel::Validations
   validates_presence_of :from
   validates_presence_of :to
   validates_presence_of :api_key
   validate :from_does_not_equal_to
 
+  DEFAULT_CONNECTION = 'Kevin Bacon'
+
   def from_does_not_equal_to
-    # YOUR CODE HERE
+    errors.add(:to, '`to` cannot be equal to `from`') if from == to
   end
 
-  def initialize(api_key='')
-    # your code here
+  def initialize(api_key = '')
+    @api_key = api_key
+    @from = DEFAULT_CONNECTION 
+    @to = DEFAULT_CONNECTION
+    @uri = nil
+    @response = nil
   end
 
   def find_connections
