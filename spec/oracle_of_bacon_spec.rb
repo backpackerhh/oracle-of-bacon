@@ -102,7 +102,7 @@ describe OracleOfBacon do
     it { should match /a=3%252\+%22a/ }
   end
 
-  describe 'service connection', :pending => true do
+  describe 'service connection' do
     before(:each) do
       @oob = OracleOfBacon.new
       @oob.stub(:valid?).and_return(true)
