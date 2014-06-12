@@ -47,7 +47,7 @@ describe OracleOfBacon do
     end
   end
 
-  describe 'parsing XML response', :pending => true do
+  describe 'parsing XML response' do
     describe 'for unauthorized access/invalid API key' do
       subject { OracleOfBacon::Response.new(File.read 'spec/unauthorized_access.xml') }
 
