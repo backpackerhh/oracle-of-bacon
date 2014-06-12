@@ -20,6 +20,15 @@ class OracleOfBacon
   validate :from_does_not_equal_to
 
   DEFAULT_CONNECTION = 'Kevin Bacon'
+  NETWORK_ERRORS = [
+    Timeout::Error,
+    Errno::EINVAL,
+    Errno::ECONNRESET,
+    EOFError,
+    Net::HTTPBadResponse,
+    Net::HTTPHeaderSyntaxError,
+    Net::ProtocolError
+  ]
 
   def from_does_not_equal_to
     errors.add(:to, '`to` cannot be equal to `from`') if from == to
@@ -37,14 +46,10 @@ class OracleOfBacon
     make_uri_from_arguments
     begin
       xml = URI.parse(uri).read
-    rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
-      Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError,
-      Net::ProtocolError => e
-      # convert all of these into a generic OracleOfBacon::NetworkError,
-      #  but keep the original error message
-      # your code here
+    rescue *NETWORK_ERRORS => e
+      raise NetworkError, e
     end
-    # your code here: create the OracleOfBacon::Response object
+    @response = Response.new(xml)
   end
 
   def make_uri_from_arguments
