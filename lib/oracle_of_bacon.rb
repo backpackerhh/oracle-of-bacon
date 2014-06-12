@@ -48,12 +48,12 @@ class OracleOfBacon
   end
 
   def make_uri_from_arguments
-    # your code here: set the @uri attribute to properly-escaped URI
-    #   constructed from the @from, @to, @api_key arguments
+    @uri = "http://oracleofbacon.org/cgi-bin/xml?p=#{scaped_api_key}&a=#{scaped_from}&b=#{scaped_to}"
   end
       
   class Response
     attr_reader :type, :data
+
     # create a Response object from a string of XML markup.
     def initialize(xml)
       @doc = Nokogiri::XML(xml)
@@ -100,6 +100,15 @@ class OracleOfBacon
 
     def movies
       @doc.xpath('//movie')
+    end
+  end
+
+  private
+
+  # Scapes all params passed to Oracle of Bacon service
+  %w[api_key from to].each do |param|
+    define_method "scaped_#{param}" do
+      CGI.escape send(param)
     end
   end
 end
